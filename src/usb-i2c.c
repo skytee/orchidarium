@@ -88,7 +88,7 @@ int usb_i2c_read_byte_data(int fd, unsigned char addr, unsigned char* values, ss
 
 	tcdrain(fd);
 
-	// wait for sensor to prepare data
+	// wait for slave device to prepare data
 	usleep(usecs);
 
 	timeout.tv_usec=500000;

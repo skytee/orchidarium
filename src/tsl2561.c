@@ -34,26 +34,26 @@ unsigned int calculate_lux(unsigned int ch0, unsigned int ch1)
 	// compute and round ratio of raw values
 	_ratio = 0;
 	if (channel0 != 0)
-		_ratio = (channel1 << (RATIO_SCALE+1)) / channel0;
+		_ratio = (channel1 << (TSL2561_RATIO_SCALE+1)) / channel0;
 	ratio = (_ratio + 1) >> 1;
 	
 	// based on coefficients of T package (different for CS package)
-	if ((ratio >= 0) && (ratio <= K1T))
-		{b=B1T; m=M1T;}
-	else if (ratio <= K2T)
-		{b=B2T; m=M2T;}
-	else if (ratio <= K3T)
-		{b=B3T; m=M3T;}
-	else if (ratio <= K4T)
-		{b=B4T; m=M4T;}
-	else if (ratio <= K5T)
-		{b=B5T; m=M5T;}
-	else if (ratio <= K6T)
-		{b=B6T; m=M6T;}
-	else if (ratio <= K7T)
-		{b=B7T; m=M7T;}
-	else if (ratio > K8T)
-		{b=B8T; m=M8T;}
+	if ((ratio >= 0) && (ratio <= TSL2561_K1T))
+		{b=TSL2561_B1T; m=TSL2561_M1T;}
+	else if (ratio <= TSL2561_K2T)
+		{b=TSL2561_B2T; m=TSL2561_M2T;}
+	else if (ratio <= TSL2561_K3T)
+		{b=TSL2561_B3T; m=TSL2561_M3T;}
+	else if (ratio <= TSL2561_K4T)
+		{b=TSL2561_B4T; m=TSL2561_M4T;}
+	else if (ratio <= TSL2561_K5T)
+		{b=TSL2561_B5T; m=TSL2561_M5T;}
+	else if (ratio <= TSL2561_K6T)
+		{b=TSL2561_B6T; m=TSL2561_M6T;}
+	else if (ratio <= TSL2561_K7T)
+		{b=TSL2561_B7T; m=TSL2561_M7T;}
+	else if (ratio > TSL2561_K8T)
+		{b=TSL2561_B8T; m=TSL2561_M8T;}
 
 	unsigned long temp;
 	temp = ((channel0 * b) - (channel1 * m));
@@ -61,10 +61,10 @@ unsigned int calculate_lux(unsigned int ch0, unsigned int ch1)
 	// do not allow negative lux value
 	if (temp < 0) temp = 0;
 
-	// round lsb (2^(LUX_SCALE-1))
-	temp += (1 << (LUX_SCALE-1));
+	// round lsb (2^(TSL2561_LUX_SCALE-1))
+	temp += (1 << (TSL2561_LUX_SCALE-1));
 
 	// strip off fractional portion
-	unsigned long lux = temp >> LUX_SCALE;
+	unsigned long lux = temp >> TSL2561_LUX_SCALE;
 	return(lux);
 }
