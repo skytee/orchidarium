@@ -19,7 +19,13 @@
 #ifndef _USB_I2C_H
 #define _USB_I2C_H
 
-// read/write single byte for non-registered devices
+struct usb_i2c_data {
+    unsigned char reg;
+	unsigned char *buf;
+	short len;
+};
+
+// write single byte for non-registered devices
 // returns 0 on success, -1 on failure
 int usb_i2c_write_byte(int fd, unsigned char addr, unsigned char value);
 
@@ -29,4 +35,8 @@ int usb_i2c_write_byte(int fd, unsigned char addr, unsigned char value);
 // size: how many bytes to read
 // usecs: time to sleep between issuing write and subsequent read command to usb-i2c
 int usb_i2c_read_byte_data(int fd, unsigned char addr, unsigned char* values, ssize_t size, int usecs);
+
+// write a payload to i2c devices with a 1 byte internal address register
+int usb_i2c_write_byte_data(int fd, unsigned char addr, struct usb_i2c_data *data);
+
 #endif

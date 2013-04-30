@@ -57,7 +57,7 @@ static void die(const char *fmt, ...)
 
 int main(int argc, char *argv[])
 {
-	int	fd, ret, c, verbosity = 0, errflag = 0, try, success;
+	int	fd, ret, c, verbosity = 0, errflag = 0, try, success, wake_tsl2561 = 0;
 	char port[MAXDATASIZE] = USBI2CDEVICE;
 	struct termios oldtio;
 	speed_t baudrate = BAUDRATE;
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	float humidity, temp, lux;
 	humidity = temp = lux = 0.0;
 
-	while(( c = getopt( argc, argv, "p:v" )) != -1 )
+	while(( c = getopt( argc, argv, "p:vi" )) != -1 )
 	{
 		switch( c ) {
 			case 'p':
@@ -75,6 +75,9 @@ int main(int argc, char *argv[])
 				break;
 			case 'v':
 				verbosity++;
+				break;
+			case 'i':
+				wake_tsl2561++;
 				break;
 			case '?': ++errflag;
 				break;
@@ -85,6 +88,7 @@ int main(int argc, char *argv[])
 		fprintf (stderr,"Usage:\n%s [options]\n"
 				"\t-p <port>   use this device, default: " USBI2CDEVICE "\n"
 				"\t-v          increase verbosity level\n"
+				"\t-i          wake up TSL2561 from sleep mode\n"
 				, *argv);
 		exit (2);
 	}
@@ -107,26 +111,10 @@ int main(int argc, char *argv[])
 			die("setterm(), maybe the device is not available?");
 	}
 
-	/*
-	// wake sensor TSL2561 from sleep: write 0x3 to control register once!
-	for (success = 0, try = 0; try < 3; try++) {
-		if (usb_i2c_write_byte(fd, TSL2561_SLAVE_ADDR, 0x3) < 0) {
-			if (verbosity)
-				fprintf(stderr, "usb_i2c_write_byte()\n");
-			continue;
-		}
-		++success;
-		usleep(400000); // wait for sensor to ready data
-		break;
-	}
-	if (!success)
-		die("Cannot read TSL2561");
-	}
-	*/
 
 	// read raw values from TSL2561 and compute illuminance
 	for (success = 0, try = 0; try < 3; try++) {
-		/* read channel 0: sensitive to both visible and infrared light */
+		// read channel 0: sensitive to both visible and infrared light 
 		// ask i2c-usb: write single command byte 0xac to TSL2561_SLAVE_ADDR
 		if (usb_i2c_write_byte(fd, TSL2561_SLAVE_ADDR, 0xac) < 0) {
 			if (verbosity)
@@ -142,7 +130,7 @@ int main(int argc, char *argv[])
 		}
 		ch0 = 256 * data[1] + data[0];
 	
-		/* read channel 1: sensitive primarily to infrared light */
+		// read channel 1: sensitive primarily to infrared light
 		if (usb_i2c_write_byte(fd, TSL2561_SLAVE_ADDR, 0xae) < 0) {
 			if (verbosity)
 				fprintf(stderr, "usb_i2c_write_byte()\n");
@@ -155,7 +143,29 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		ch1 = 256 * data[1] + data[0];
-	
+
+		if ((ch1 == 0) && (ch0 == 0))
+		{
+			++wake_tsl2561;
+		}
+		if (wake_tsl2561) {
+			struct usb_i2c_data payload;
+			payload.reg = (TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL);
+			unsigned char a = TSL2561_CONTROL_POWERON;
+			payload.buf = &a;
+			payload.len = 1;
+		
+			if (usb_i2c_write_byte_data(fd,	TSL2561_SLAVE_ADDR, &payload) < 0) 
+				fprintf(stderr, "usb_i2c_write_byte_data()\n");
+			if (usb_i2c_read_byte_data(fd, TSL2561_SLAVE_ADDR, data, 1, 0) < 1) 
+				fprintf(stderr, "usb_i2c_read_byte_data()\n");
+		
+			usleep(450 * 1000); // wait for sensor 
+
+			wake_tsl2561 = 0;
+			continue;
+		}
+
 		printf("%d\n%d\n%d\n", ch0, ch1, calculate_lux(ch0, ch1));
 		++success;
 		break;

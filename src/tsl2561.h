@@ -49,6 +49,11 @@
 #define B8T 0x0000 // 0.000 * 2^LUX_SCALE
 #define M8T 0x0000 // 0.000 * 2^LUX_SCALE
 
+// register defines
+#define TSL2561_COMMAND_BIT (0x80)
+#define TSL2561_REGISTER_CONTROL (0x00)
+#define TSL2561_CONTROL_POWERON   (0x03)
+
 // See data sheet: "TSL2560, TSL2561 LIGHT-TO-DIGITAL CONVERTER"
 // by Texas Advanced Optoelectronic Solutions Inc
 // ch0 - raw value from channel 0 of TSL2561

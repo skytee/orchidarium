@@ -20,7 +20,9 @@
 #include <string.h>
 #include <sys/select.h>
 #include <sys/types.h>
+#include <stdlib.h>
 #include <termios.h>
+#include <usb-i2c.h>
 
 // read/write single byte for non-registered devices
 // returns 0 on success, -1 on failure
@@ -33,7 +35,7 @@ int usb_i2c_write_byte(int fd, unsigned char addr, unsigned char value)
 	struct timeval timeout;
 
 	data[0] = 0x53;
-	data[1] = addr << 1;
+	data[1] = (addr << 1);
 	data[2] = value;
 
 	sz = (write(fd, data, 3 * sizeof(unsigned char)));
@@ -104,3 +106,51 @@ int usb_i2c_read_byte_data(int fd, unsigned char addr, unsigned char* values, ss
 	return sz;
 }
 
+// write a payload to i2c devices with a 1 byte internal address register
+// returns 0 on success, -1 on failure
+int usb_i2c_write_byte_data(int fd, unsigned char addr, struct usb_i2c_data *data)
+{
+	ssize_t sz;
+	unsigned char *msg;
+	size_t msg_size = 4 + data->len; // plus 4 bytes usb-i2c command
+
+	fd_set set;
+	struct timeval timeout;
+
+	msg = malloc(msg_size);
+	if (msg == NULL)
+		return -1;
+
+	bzero(msg, msg_size);
+
+	msg[0] = 0x55;			// usb-i2c command
+	msg[1] = (addr << 1);	// device address on i2c bus
+	msg[2] = data->reg;		// device internal register
+	msg[3] = data->len;		// length of data to send 
+
+	memcpy((msg+4), data->buf, data->len);
+
+	sz = write(fd, msg, msg_size);
+	if (sz < msg_size)
+		return -1;
+
+	tcdrain(fd);
+
+	// read status byte from i2c-usb
+	timeout.tv_usec=500000;
+	timeout.tv_sec=0;
+	FD_ZERO(&set);
+	FD_SET(fd, &set);
+	if ( select((FD_SETSIZE), &set, NULL, NULL, &timeout) == 0 )
+		return -1;
+
+	sz = read(fd, msg, 1);
+	if (sz < 1)
+		return -1;
+
+	// i2c-usb: 0x0 = fail, else succes
+	if (msg[0] == 0)
+		return -1;
+
+	return 0;
+}
