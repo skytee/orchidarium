@@ -15,6 +15,8 @@
  *				the Free Software Foundation; either version 2 of the License, or
  *				(at your option) any later version.
 */
+#include <string.h>
+#include <fcntl.h> 
 #include <setterm.h>
 
 // returns 0 on success, -1 on failure (errno is set), >0 on failure (errno not set)

@@ -17,8 +17,6 @@
 */
 #ifndef _SETTERM_H
 #define _SETTERM_H
-#include <string.h>
-#include <fcntl.h> 
 #include <termios.h>
 int setterm(int fd, speed_t baudrate);
 #endif
