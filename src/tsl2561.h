@@ -19,11 +19,7 @@
 #ifndef _TSL2561_H
 #define _TSL2561_H
 
-// TAOS TSL2561 defines
-#define TSL2561_LUX_SCALE 14 // scale by 2^14
-#define TSL2561_RATIO_SCALE 9 // scale ratio by 2^9
-
-// T Package coefficients, as per data sheet
+// approximation coefficients, as per data sheet, for T (6-lead TMB) package
 #define TSL2561_K1T 0x0040 // 0.125 * 2^RATIO_SCALE
 #define TSL2561_B1T 0x01f2 // 0.0304 * 2^LUX_SCALE
 #define TSL2561_M1T 0x01be // 0.0272 * 2^LUX_SCALE
@@ -48,14 +44,16 @@
 #define TSL2561_K8T 0x029a // 1.3 * 2^RATIO_SCALE
 #define TSL2561_B8T 0x0000 // 0.000 * 2^LUX_SCALE
 #define TSL2561_M8T 0x0000 // 0.000 * 2^LUX_SCALE
+#define TSL2561_LUX_SCALE 14 // scale by 2^14
+#define TSL2561_RATIO_SCALE 9 // scale ratio by 2^9
 
 // register defines
 #define TSL2561_COMMAND_BIT (0x80)
 #define TSL2561_REGISTER_CONTROL (0x00)
-#define TSL2561_CONTROL_POWERON   (0x03)
+#define TSL2561_CONTROL_POWERON (0x03)
 
-// See data sheet: "TSL2560, TSL2561 LIGHT-TO-DIGITAL CONVERTER"
-// by Texas Advanced Optoelectronic Solutions Inc
+// Illuminance approximation function, see data sheet: "TSL2560, TSL2561
+// LIGHT-TO-DIGITAL CONVERTER" by Texas Advanced Optoelectronic Solutions Inc
 // ch0 - raw value from channel 0 of TSL2561
 // ch1 - raw value from channel 1 of TSL2561
 // Test:: ch0 = 1735, ch1 = 709; // --> 22 lux

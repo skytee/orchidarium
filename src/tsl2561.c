@@ -21,6 +21,7 @@
 
 // ch0 - raw value from channel 0 of TSL2561
 // ch1 - raw value from channel 1 of TSL2561
+// returns: computed illuminance value in lux
 unsigned int calculate_lux(unsigned int ch0, unsigned int ch1)
 {
 	unsigned long channel0, channel1, ratio, _ratio;

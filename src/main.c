@@ -144,11 +144,13 @@ int main(int argc, char *argv[])
 		}
 		ch1 = 256 * data[1] + data[0];
 
+		// plausibility check: if both values equal 0, device is probably sleeping.
 		if ((ch1 == 0) && (ch0 == 0))
 		{
 			++wake_tsl2561;
 		}
-		if (wake_tsl2561) {
+		if (wake_tsl2561)
+		{
 			struct usb_i2c_data payload;
 			payload.reg = (TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL);
 			unsigned char a = TSL2561_CONTROL_POWERON;
