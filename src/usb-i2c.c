@@ -106,9 +106,50 @@ int usb_i2c_read_byte_data(int fd, unsigned char addr, unsigned char* values, ss
 	return sz;
 }
 
+// read data from i2c devices, i.e. from a 1 byte internal address register
+// returns 0 on success, -1 on failure
+int usb_i2c_read_reg_data(int fd, unsigned char addr, struct usb_i2c_data *data)
+{
+	ssize_t sz;
+	size_t msg_size = 4;
+	unsigned char msg[msg_size];
+
+	fd_set set;
+	struct timeval timeout;
+
+	bzero(msg, msg_size);
+
+	msg[0] = 0x55;				// usb-i2c command
+	msg[1] = (addr << 1) | 1;	// device address on i2c bus
+	msg[2] = data->reg;			// device internal register
+	msg[3] = data->len;			// length of data to read
+
+	sz = write(fd, msg, msg_size);
+	if (sz < msg_size)
+		return -1;
+
+	tcdrain(fd);
+
+	// read reply from i2c-usb, data->len bytes are expected
+	bzero(data->buf, data->len);
+	timeout.tv_usec=500000;
+	timeout.tv_sec=0;
+	FD_ZERO(&set);
+	FD_SET(fd, &set);
+	if ( select((FD_SETSIZE), &set, NULL, NULL, &timeout) == 0 )
+		return -1;
+
+	sz = read(fd, data->buf, data->len);
+	if (sz < data->len)
+		return -1;
+
+	return 0;
+}
+
+
 // write a payload to i2c devices with a 1 byte internal address register
 // returns 0 on success, -1 on failure
-int usb_i2c_write_byte_data(int fd, unsigned char addr, struct usb_i2c_data *data)
+int usb_i2c_write_reg_data(int fd, unsigned char addr, struct usb_i2c_data *data)
 {
 	ssize_t sz;
 	unsigned char *msg;

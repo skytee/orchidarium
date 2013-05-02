@@ -157,10 +157,10 @@ int main(int argc, char *argv[])
 			payload.buf = &a;
 			payload.len = 1;
 		
-			if (usb_i2c_write_byte_data(fd,	TSL2561_SLAVE_ADDR, &payload) < 0) 
-				fprintf(stderr, "usb_i2c_write_byte_data()\n");
+			if (usb_i2c_write_reg_data(fd,	TSL2561_SLAVE_ADDR, &payload) < 0) 
+				if (verbosity) fprintf(stderr, "usb_i2c_write_reg_data()\n");
 			if (usb_i2c_read_byte_data(fd, TSL2561_SLAVE_ADDR, data, 1, 0) < 1) 
-				fprintf(stderr, "usb_i2c_read_byte_data()\n");
+				if (verbosity) fprintf(stderr, "usb_i2c_read_byte_data()\n");
 		
 			usleep(450 * 1000); // wait for sensor 
 

@@ -36,7 +36,11 @@ int usb_i2c_write_byte(int fd, unsigned char addr, unsigned char value);
 // usecs: time to sleep between issuing write and subsequent read command to usb-i2c
 int usb_i2c_read_byte_data(int fd, unsigned char addr, unsigned char* values, ssize_t size, int usecs);
 
+// read data from i2c devices, i.e. from a 1 byte internal address register
+// returns 0 on success, -1 on failure
+int usb_i2c_read_reg_data(int fd, unsigned char addr, struct usb_i2c_data *data);
+
 // write a payload to i2c devices with a 1 byte internal address register
-int usb_i2c_write_byte_data(int fd, unsigned char addr, struct usb_i2c_data *data);
+int usb_i2c_write_reg_data(int fd, unsigned char addr, struct usb_i2c_data *data);
 
 #endif
