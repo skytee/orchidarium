@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 		ch1 = 256 * data[1] + data[0];
 
 		// plausibility check: if both values equal 0, device is probably sleeping.
-		if ((ch1 == 0) && (ch0 == 0))
+		if ((ch1 == 0) && (ch0 == 0) && (try == 0))
 		{
 			++wake_tsl2561;
 		}
