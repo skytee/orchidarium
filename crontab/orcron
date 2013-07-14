@@ -1,0 +1,25 @@
+# /etc/cron.d/orcron
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=skytee@skytee.de
+
+# socket1: light, socket2: fan, socket3: mist
+
+# m h dom mon dow user  command
+# light: 8:00-20:00
+00  8	* * *	thaas	orchidarium.py --light on
+00 20	* * *	thaas	orchidarium.py --light off
+# fan: 5:30-21:00
+30  5	* * *	thaas	orchidarium.py --fan on
+00 21	* * *	thaas	orchidarium.py --fan off
+# fan and mist: 9:30-10:00, 13:00-13:30 and 17:00-17:30
+30  9	* * *	thaas	orchidarium.py --fan off  --mist on
+00 10	* * *	thaas	orchidarium.py --mist off --fan on
+00 13	* * *	thaas	orchidarium.py --fan off  --mist on
+30 13	* * *	thaas	orchidarium.py --mist off --fan on
+00 17	* * *	thaas	orchidarium.py --fan off  --mist on
+30 17	* * *	thaas	orchidarium.py --mist off --fan on
+
+*/5 *	* * *	www-data orcgraph.sh
+11  0	* * * 	www-data orcsavedata.sh
+@weekly		thaas	echo | mail -s "Orchidarium - please add water" skytee@skytee.de fabienne@fabienne.us 
