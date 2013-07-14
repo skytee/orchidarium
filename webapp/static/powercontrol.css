@@ -1,0 +1,87 @@
+body {
+    background-color: white;
+    color: #947867; /* dark01 */ 
+    font-family: Arial, sans-serif;
+}
+h2 {
+    margin: 10px 0px 0px 10px;
+    padding: 0px 0px 5px 0px;
+    border-bottom: 1px solid #e3d4c6; /* light01 */
+}
+table {
+    text-align: left;
+    margin: 10px;
+    padding: 5px;
+    border-spacing:0;
+    border-collapse:collapse;
+}
+table label {
+    font-weight: normal;
+    width: 150px;
+    display: block;
+}
+table th, table td {
+    padding: 5px 10px 5px 10px;
+    border-bottom: 1px solid #e3d4c6; /* light01 */
+}
+table td {
+    width: 120px;
+    text-align: right;
+}
+table td input {
+    margin-right: 70px;
+}
+
+.infoPanel {
+    margin: 10px;
+    width: 500px;
+}
+.infoPanel span {
+    float: left;
+    padding: 5px 10px 5px 10px;
+    border-bottom: 1px solid #e3d4c6; /* light01 */
+}
+
+.infoPanel span.label {
+    clear: left;
+    width: 150px;
+}
+.infoPanel span.data {
+    font-weight: bold;
+    text-align: right;
+    min-width: 50px;
+}
+.infoPanel span.unit {
+    /*clear: both;*/
+    width: 50px;
+}
+.infoPanel #sysmsg,
+.infoPanel #infomsg {
+    margin: 10px 0px 0px 0px;
+    clear: both;
+    min-height: 50px;
+    max-height: 175px;
+    width: 480px;
+    overflow-x: auto;
+    /*overflow-y: scroll;*/
+    border: 1px solid #e3d4c6; /* light01 */
+
+}
+.infoPanel #statimg {
+    float: left;
+    clear: both;
+    border: 1px solid #e3d4c6; /* light01 */
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+}
+.infoPanel #crontab {
+	resize: none !important;
+    float: left;
+    clear: both;
+    border: 1px solid #e3d4c6; /* light01 */
+    background: white;
+    padding: 5px;
+    margin: 10px 0px 10px 0px;   
+    width: 495px;
+}
+

@@ -1,0 +1,34 @@
+$def with (form, sysmsg, infomsg, crontab)
+<!doctype html>
+
+<html>
+    <head>
+	<title>power control</title>
+	<link rel="stylesheet" type="text/css" href="/static/powercontrol.css" />
+	<script type="text/javascript" src="/static/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="/static/powercontrol.js"></script>
+	<style type="text/css">
+colors {
+#e3d4c6; /* light01 */
+#e0c2a6; /* mid01 */
+#947867; /* dark01 */
+#bfbcb9; /* light02 */
+#706c67; /* dark02 */
+}
+	</style>
+    </head>
+    <body>
+	<h2>Controls</h2>
+	$:form.render()
+	<h2>Info</h2>
+	<div class="infoPanel">	
+	    <span class="label">Temperature </span><span id="temperature" class="data"></span><span class="unit">&deg;C</span>
+	    <span class="label">Humidity </span><span id="humidity" class="data"></span><span class="unit">% rel.</span>
+	    <span class="label">Illuminance </span><span id="illuminance" class="data"></span><span class="unit">lx</span>
+	    <span id="sysmsg">$sysmsg</span> 
+	    <span id="infomsg">$infomsg</span> 
+		<img src="/static/orchidarium_graph.png" alt="Orchidarium Stats" id="statimg"/>
+	    <textarea id="crontab" cols="80" rows="27" readonly="readonly" disabled="disabled" noresize="noresize">$crontab</textarea>
+	</div>
+    </body>
+</html>
