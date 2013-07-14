@@ -2,8 +2,8 @@ import threading, subprocess
 from time import sleep
 import syslog
 
-# Provide a self-synchronising container object, i.e.
-# once one of its methods is called all subsequent call attempts block until first call finishes.
+# Provideis serialized command execution.
+# Once call() is called all subsequent call attempts block until first call finishes.
 # This is true for calls from same or different threads (not reentrant).
 # Thorsten Haas, <dev@thorstenhaas.de>
 class syncsubprocess:
