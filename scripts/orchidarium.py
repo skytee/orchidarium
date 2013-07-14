@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# sispmctl wrapper script. Makes the crontab a lot more readable.
 import getopt, sys, subprocess
 from time import sleep
 
