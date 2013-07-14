@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Web UI of @theorchidarium
+# Thorsten Haas, <dev@thorstenhaas.de>
 import web, json, re
 from time import sleep
 from thread import start_new_thread

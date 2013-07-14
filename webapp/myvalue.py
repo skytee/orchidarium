@@ -3,6 +3,7 @@ import threading
 # Provide a self-synchronising container object, i.e.
 # once one of its methods is called all subsequent call attempts block until first call finishes.
 # This is true for calls from same or different threads (not reentrant).
+# Thorsten Haas, <dev@thorstenhaas.de>
 class lockingcache:
 	_cache = {}
 	_cacheLock = threading.Lock()
