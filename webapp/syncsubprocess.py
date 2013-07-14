@@ -2,7 +2,7 @@ import threading, subprocess
 from time import sleep
 import syslog
 
-# Provideis serialized command execution.
+# Provides serialized command execution.
 # Once call() is called all subsequent call attempts block until first call finishes.
 # This is true for calls from same or different threads (not reentrant).
 # Thorsten Haas, <dev@thorstenhaas.de>
